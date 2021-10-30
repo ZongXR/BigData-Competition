@@ -5,15 +5,13 @@
 <li>将master.sh放入主节点的/home/xxx目录下；将slave.sh放入从节点的/home/xxx目录下。xxx可自定义</li>
 <li>
 对于主节点执行以下代码，其中master.sh的参数为各个从节点的ip<br />
-<code>chmod +x ./master.sh<br />
-./master.sh 192.168.137.226 192.168.137.135 192.168.137.188
-</code>
+<code>chmod +x ./master.sh</code><br />
+<code>./master.sh 192.168.137.226 192.168.137.135 192.168.137.188</code>
 </li>
 <li>
 对于从节点执行以下代码<br />
-<code>chmod +x ./slave.sh<br />
-./slave.sh
-</code>
+<code>chmod +x ./slave.sh</code><br />
+<code>./slave.sh</code>
 </li>
 </ol>
 <h3>更新日志</h3>
