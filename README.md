@@ -5,11 +5,13 @@
 <li>将master.sh放入主节点的/home/xxx目录下；将slave.sh放入从节点的/home/xxx目录下。xxx可自定义</li>
 <li>
 对于主节点执行以下代码，其中master.sh的参数为各个从节点的ip<br />
+<code>sed -i 's/\r$//' ./master.sh</code><br />
 <code>chmod +x ./master.sh</code><br />
 <code>./master.sh 192.168.137.226 192.168.137.135 192.168.137.188</code>
 </li>
 <li>
 对于从节点执行以下代码<br />
+<code>sed -i 's/\r$//' ./slave.sh</code><br />
 <code>chmod +x ./slave.sh</code><br />
 <code>./slave.sh</code>
 </li>
@@ -21,5 +23,8 @@
 </tr>
 <tr>
 <td>0.0.1.0</td><td>配置主从节点hosts文件；配置主节点免密登录；配置主从节点防火墙</td><td>2021年10月31日</td>
+</tr>
+<tr>
+<td>0.0.2.0</td><td>配置时区同步服务；配置jdk</td><td>2021年10月31日</td>
 </tr>
 </table>
