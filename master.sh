@@ -42,10 +42,37 @@ sed -i '25 i fudge 127.127.1.0 stratum 10' /etc/ntp.conf
 sed -i '25 i server 127.127.1.0' /etc/ntp.conf
 sed -i 's/^[^#].*centos.pool.ntp.org*/#&/g'  /etc/ntp.conf
 systemctl start ntpd
-ststemctl enable ntpd
+systemctl enable ntpd
+# 同步时钟
+for ((i=1; i<index; i++))
+do
+  ssh root@slave${i} "ntpdate master"
+done
 # 配置java
 mkdir -p /usr/java
 tar -zxvf ./jdk-8u171-linux-x64.tar.gz -C /usr/java
+# 配置zookeeper
+mkdir -p /usr/zookeeper
+tar -zxvf ./zookeeper-3.4.10.tar.gz -C /usr/zookeeper
+mv /usr/zookeeper/zookeeper-3.4.10/conf/zoo_sample.cfg /usr/zookeeper/zookeeper-3.4.10/conf/zoo.cfg
+sed -i 's/^dataDir=*/#&/g' /usr/zookeeper/zookeeper-3.4.10/conf/zoo.cfg
+mkdir -p /usr/zookeeper/zookeeper-3.4.10/zkdata
+mkdir -p /usr/zookeeper/zookeeper-3.4.10/zkdatalog
+echo 'dataDir=/usr/zookeeper/zookeeper-3.4.10/zkdata' >> /usr/zookeeper/zookeeper-3.4.10/conf/zoo.cfg
+echo 'dataLogDir=/usr/zookeeper/zookeeper-3.4.10/zkdatalog' >> /usr/zookeeper/zookeeper-3.4.10/conf/zoo.cfg
+echo 'server.1=master:2888:3888' >> /usr/zookeeper/zookeeper-3.4.10/conf/zoo.cfg
+for ((i=1; i<index; i++))
+do
+  echo "server.$((i+1))=slave$i:2888:3888" >> /usr/zookeeper/zookeeper-3.4.10/conf/zoo.cfg
+done
+echo '1' > /usr/zookeeper/zookeeper-3.4.10/zkdata/myid
+for ((i=1; i<index; i++))
+do
+  ssh root@slave${i} "mkdir -p /usr/zookeeper/zookeeper-3.4.10/zkdata"
+  ssh root@slave${i} "mkdir -p /usr/zookeeper/zookeeper-3.4.10/zkdatalog"
+  ssh root@slave${i} "echo $((i+1)) > /usr/zookeeper/zookeeper-3.4.10/zkdata/myid"
+  scp /usr/zookeeper/zookeeper-3.4.10/conf/zoo.cfg root@slave${i}:/usr/zookeeper/zookeeper-3.4.10/conf
+done
 # 配置环境变量
 echo '# timezone' >> /etc/profile
 echo "TZ='Asia/Shanghai'; export TZ" >> /etc/profile
@@ -54,11 +81,15 @@ echo 'export JAVA_HOME=/usr/java/jdk1.8.0_171' >> /etc/profile
 echo 'export PATH=$PATH:$JAVA_HOME/bin' >> /etc/profile
 echo 'export CLASSPATH=$JAVA_HOME/lib' >> /etc/profile
 echo 'export JAVA_HOME PATH CLASSPATH' >> /etc/profile
+echo '# zookeeper' >> /etc/profile
+echo 'export ZOOKEEPER_HOME=/usr/zookeeper/zookeeper-3.4.10' >> /etc/profile
+echo 'export PATH=$PATH:$ZOOKEEPER_HOME/bin' >> /etc/profile
 echo 'unset MAILCHECK' >> /etc/profile
 source /etc/profile
 for ((i=1; i<index; i++))
 do
   scp /etc/profile root@slave${i}:/etc/
+  ssh root@slave${i} "source /etc/profile"
 done
 
 
