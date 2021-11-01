@@ -1,8 +1,14 @@
-<h1>安装hadoop</h1>
+<h1>一键自动安装hadoop</h1>
+<img src="https://hadoop.apache.org/hadoop-logo.jpg" alt="hadoop">
+<h2>关于此项目</h2>
+<h3>为什么做了这么一个项目？</h3>
+因为部分初学者对于安装配置hadoop集群环境感到苦恼，所以做了这么一个解放人力的自动化脚本。能够省去安装过程中的诸多麻烦。
+<h3>这个项目有什么用</h3>
+使用它能一键自动安装hadoop集群环境，自动给你配置环境变量，自动给你配置hosts，自动给你配置免密登录，自动给你做其他配置，非常方便。
 <h2>使用方法</h2>
 <ol>
 <li>使用<a href="http://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso" target="_blank">此镜像</a>，安装好集群环境，记录下各个节点的ip</li>
-<li>将master.sh放入主节点的/home/xxx目录下；将slave.sh放入从节点的/home/xxx目录下；将start.sh放入主节点/home/xxx目录下。xxx可自定义</li>
+<li>将master.sh放入主节点的/home/xxx目录下；将slave.sh放入从节点的/home/xxx目录下；将start.sh放入主节点/home/xxx目录下；将hadoop目录放入主节点/home/xxx路径下。xxx可自定义</li>
 <li>
 对于从节点执行以下代码<br />
 <code>sed -i 's/\r$//' ./slave.sh</code><br />
@@ -35,5 +41,8 @@
 </tr>
 <tr>
 <td>0.1.0.0</td><td>配置安装zookeeper；添加启动脚本</td><td>2021年10月31日</td>
+</tr>
+<tr>
+<td>0.1.1.0</td><td>配置安装hadoop</td><td>2021年11月1日</td>
 </tr>
 </table>

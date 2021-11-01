@@ -24,5 +24,8 @@ tar -zxvf ./jdk-8u171-linux-x64.tar.gz -C /usr/java
 # 配置zookeeper
 mkdir -p /usr/zookeeper
 tar -zxvf ./zookeeper-3.4.10.tar.gz -C /usr/zookeeper
+# 配置hadoop
+mkdir -p /usr/hadoop
+tar -zxvf ./hadoop-2.7.3.tar.gz -C /usr/hadoop
 # 配置环境变量
 

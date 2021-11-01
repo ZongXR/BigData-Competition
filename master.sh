@@ -26,6 +26,7 @@ do
 done
 # 配置免密登录
 ssh-keygen
+ssh-copy-id master
 for ((i=1; i<index; i++))
 do
   ssh-copy-id slave${i}
@@ -73,6 +74,23 @@ do
   ssh root@slave${i} "echo $((i+1)) > /usr/zookeeper/zookeeper-3.4.10/zkdata/myid"
   scp /usr/zookeeper/zookeeper-3.4.10/conf/zoo.cfg root@slave${i}:/usr/zookeeper/zookeeper-3.4.10/conf
 done
+# 配置hadoop
+mkdir -p /usr/hadoop
+tar -zxvf ./hadoop-2.7.3.tar.gz -C /usr/hadoop
+sed -i '25 i export JAVA_HOME=/usr/java/jdk1.8.0_171' /usr/hadoop/hadoop-2.7.3/etc/hadoop/hadoop-env.sh
+sed -i '18 i export JAVA_HOME=/usr/java/jdk1.8.0_171' /usr/hadoop/hadoop-2.7.3/etc/hadoop/yarn-env.sh
+touch /usr/hadoop/hadoop-2.7.3/etc/hadoop/excludes
+echo "master" > /usr/hadoop/hadoop-2.7.3/etc/hadoop/master
+echo "" > /usr/hadoop/hadoop-2.7.3/etc/hadoop/slaves
+for ((i=1; i<index; i++))
+do
+  echo "slave$i" >> /usr/hadoop/hadoop-2.7.3/etc/hadoop/slaves
+done
+cp -r ./hadoop /usr/hadoop/hadoop-2.7.3/etc
+for ((i=1; i<index; i++))
+do
+  scp -r /usr/hadoop/hadoop-2.7.3/etc/hadoop root@slave${i}:/usr/hadoop/hadoop-2.7.3/etc
+done
 # 配置环境变量
 echo '# timezone' >> /etc/profile
 echo "TZ='Asia/Shanghai'; export TZ" >> /etc/profile
@@ -84,6 +102,9 @@ echo 'export JAVA_HOME PATH CLASSPATH' >> /etc/profile
 echo '# zookeeper' >> /etc/profile
 echo 'export ZOOKEEPER_HOME=/usr/zookeeper/zookeeper-3.4.10' >> /etc/profile
 echo 'export PATH=$PATH:$ZOOKEEPER_HOME/bin' >> /etc/profile
+echo '# hadoop' >> /etc/profile
+echo 'export HADOOP_HOME=/usr/hadoop/hadoop-2.7.3' >> /etc/profile
+echo 'export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin' >> /etc/profile
 echo 'unset MAILCHECK' >> /etc/profile
 source /etc/profile
 for ((i=1; i<index; i++))
@@ -91,6 +112,8 @@ do
   scp /etc/profile root@slave${i}:/etc/
   ssh root@slave${i} "source /etc/profile"
 done
+# 格式化节点
+hadoop namenode -format
 
 
 
