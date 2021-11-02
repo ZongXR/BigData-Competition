@@ -16,7 +16,7 @@ hostnamectl set-hostname master
 systemctl stop firewalld
 systemctl disable firewalld
 # 配置hosts
-local_ip=`ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $2}'|tr -d "addr:"​`
+local_ip=$(ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $2}'|tr -d "addr:")
 echo -e "\n${local_ip} master" >> /etc/hosts
 index=1
 for arg in "$@"

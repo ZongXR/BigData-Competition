@@ -27,5 +27,23 @@ tar -zxvf ./zookeeper-3.4.10.tar.gz -C /usr/zookeeper
 # 配置hadoop
 mkdir -p /usr/hadoop
 tar -zxvf ./hadoop-2.7.3.tar.gz -C /usr/hadoop
+# 安装mysql
+yum localinstall -y mysql57-community-release-el7-11.noarch.rpm
+yum repolist enabled | grep "mysql.*-community.*"
+yum repolist all | grep mysql
+yum install -y mysql-community-server
+systemctl daemon-reload
+systemctl start mysqld
+systemctl enable mysqld
+mysql_password=$(grep "temporary password" /var/log/mysqld.log | awk '{print $11}')
+touch ./mysql.sql
+echo 'set global validate_password_policy=0;' >> ./mysql.sql
+echo 'set global validate_password_length=4;' >> ./mysql.sql
+echo "alter user 'root'@'localhost' identified by '123456';" >> ./mysql.sql
+echo "create user 'root'@'%' identified by '123456';" >> ./mysql.sql
+echo "grant all privileges on *.* to 'root'@'%' with grant option;" >> ./mysql.sql
+echo "flush privileges;" >> ./mysql.sql
+echo "create database hongyaa;" >> ./mysql.sql
+mysql -uroot -p"$mysql_password" --connect-expired-password < ./mysql.sql
 # 配置环境变量
 

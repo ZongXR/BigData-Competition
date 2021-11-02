@@ -45,4 +45,7 @@
 <tr>
 <td>0.1.1.0</td><td>配置安装hadoop</td><td>2021年11月1日</td>
 </tr>
+<tr>
+<td>0.1.2.0</td><td>从节点配置安装mysql</td><td>2021年11月2日</td>
+</tr>
 </table>
