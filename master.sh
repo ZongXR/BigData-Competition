@@ -4,10 +4,13 @@ yum install -y net-tools
 yum install -y vim
 yum install -y ntp
 yum install -y wget
+yum install -y unzip zip
 wget https://repo.huaweicloud.com/java/jdk/8u171-b11/jdk-8u171-linux-x64.tar.gz
 wget https://archive.apache.org/dist/zookeeper/zookeeper-3.4.10/zookeeper-3.4.10.tar.gz
 wget https://archive.apache.org/dist/hadoop/core/hadoop-2.7.3/hadoop-2.7.3.tar.gz
 wget https://repo.mysql.com//mysql57-community-release-el7-11.noarch.rpm
+wget https://archive.apache.org/dist/hive/hive-2.1.1/apache-hive-2.1.1-bin.tar.gz
+wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.47.zip
 
 # 基础环境配置
 # 配置主机名
@@ -91,6 +94,13 @@ for ((i=1; i<index; i++))
 do
   scp -r /usr/hadoop/hadoop-2.7.3/etc/hadoop root@slave${i}:/usr/hadoop/hadoop-2.7.3/etc
 done
+# 安装hive
+mkdir -p /usr/hive
+tar -zxvf ./apache-hive-2.1.1-bin.tar.gz -C /usr/hive
+echo 'export HADOOP_HOME=/usr/hadoop/hadoop-2.7.3' >> /usr/hive/apache-hive-2.1.1-bin/conf/hive-env.sh
+echo 'export HIVE_CONF_DIR=/usr/hive/apache-hive-2.1.1-bin/conf' >> /usr/hive/apache-hive-2.1.1-bin/conf/hive-env.sh
+echo 'export HIVE_AUX_JARS_PATH=/usr/hive/apache-hive-2.1.1-bin/lib' >> /usr/hive/apache-hive-2.1.1-bin/conf/hive-env.sh
+cp /usr/hive/apache-hive-2.1.1-bin/lib/jline-2.12.jar /usr/hadoop/hadoop-2.7.3/share/hadoop/yarn/lib/
 # 配置环境变量
 echo '# timezone' >> /etc/profile
 echo "TZ='Asia/Shanghai'; export TZ" >> /etc/profile
@@ -105,6 +115,9 @@ echo 'export PATH=$PATH:$ZOOKEEPER_HOME/bin' >> /etc/profile
 echo '# hadoop' >> /etc/profile
 echo 'export HADOOP_HOME=/usr/hadoop/hadoop-2.7.3' >> /etc/profile
 echo 'export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin' >> /etc/profile
+echo '# hive' >> /etc/profile
+echo 'export HIVE_HOME=/usr/hive/apache-hive-2.1.1-bin' >> /etc/profile
+echo 'export PATH=$PATH:$HIVE_HOME/bin' >> /etc/profile
 echo 'unset MAILCHECK' >> /etc/profile
 source /etc/profile
 for ((i=1; i<index; i++))

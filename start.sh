@@ -22,3 +22,4 @@ for ((i=1; i<index; i++))
 do
   ssh root@slave${i} "jps"
 done
+start-balancer.sh

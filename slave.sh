@@ -45,5 +45,12 @@ echo "grant all privileges on *.* to 'root'@'%' with grant option;" >> ./mysql.s
 echo "flush privileges;" >> ./mysql.sql
 echo "create database hongyaa;" >> ./mysql.sql
 mysql -uroot -p"$mysql_password" --connect-expired-password < ./mysql.sql
+# 安装hive
+mkdir -p /usr/hive
+tar -zxvf ./apache-hive-2.1.1-bin.tar.gz -C /usr/hive
+echo 'export HADOOP_HOME=/usr/hadoop/hadoop-2.7.3' >> /usr/hive/apache-hive-2.1.1-bin/conf/hive-env.sh
+echo 'export HIVE_CONF_DIR=/usr/hive/apache-hive-2.1.1-bin/conf' >> /usr/hive/apache-hive-2.1.1-bin/conf/hive-env.sh
+echo 'export HIVE_AUX_JARS_PATH=/usr/hive/apache-hive-2.1.1-bin/lib' >> /usr/hive/apache-hive-2.1.1-bin/conf/hive-env.sh
+cp /usr/hive/apache-hive-2.1.1-bin/lib/jline-2.12.jar /usr/hadoop/hadoop-2.7.3/share/hadoop/yarn/lib/
 # 配置环境变量
 
