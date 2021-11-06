@@ -23,3 +23,6 @@ do
   ssh root@slave${i} "jps"
 done
 start-balancer.sh
+# 启动hive
+nohup hive --service metastore &
+

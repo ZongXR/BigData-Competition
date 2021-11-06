@@ -52,5 +52,7 @@ echo 'export HADOOP_HOME=/usr/hadoop/hadoop-2.7.3' >> /usr/hive/apache-hive-2.1.
 echo 'export HIVE_CONF_DIR=/usr/hive/apache-hive-2.1.1-bin/conf' >> /usr/hive/apache-hive-2.1.1-bin/conf/hive-env.sh
 echo 'export HIVE_AUX_JARS_PATH=/usr/hive/apache-hive-2.1.1-bin/lib' >> /usr/hive/apache-hive-2.1.1-bin/conf/hive-env.sh
 cp /usr/hive/apache-hive-2.1.1-bin/lib/jline-2.12.jar /usr/hadoop/hadoop-2.7.3/share/hadoop/yarn/lib/
+cp ./hive/hive-slave.xml /usr/hive/apache-hive-2.1.1-bin/conf/hive-site.xml
+/usr/hive/apache-hive-2.1.1-bin/bin/schematool -dbType mysql -initSchema --verbose
 # 配置环境变量
 

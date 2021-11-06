@@ -8,7 +8,7 @@
 <h2>使用方法</h2>
 <ol>
 <li>使用<a href="http://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso" target="_blank">此镜像</a>，安装好集群环境，记录下各个节点的ip</li>
-<li>将master.sh放入主节点的/home/xxx目录下；将slave.sh放入从节点的/home/xxx目录下；将start.sh放入主节点/home/xxx目录下；将hadoop目录放入主节点/home/xxx路径下。xxx可自定义</li>
+<li>将master.sh放入主节点的/home/xxx目录下；将slave.sh放入从节点的/home/xxx目录下；将start.sh放入主节点/home/xxx目录下；将hadoop目录放入主节点/home/xxx路径下；将hive目录放入所有节点/home/xxx路径下。xxx可自定义</li>
 <li>
 对于从节点执行以下代码<br />
 <code>sed -i 's/\r$//' ./slave.sh</code><br />
@@ -50,5 +50,8 @@
 </tr>
 <tr>
 <td>0.1.3.0</td><td>安装hive</td><td>2021年11月5日</td>
+</tr>
+<tr>
+<td>0.1.4.0</td><td>配置并启动Hive</td><td>2021年11月6日</td>
 </tr>
 </table>
