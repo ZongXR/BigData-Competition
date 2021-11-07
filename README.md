@@ -54,4 +54,7 @@
 <tr>
 <td>0.1.4.0</td><td>配置并启动Hive</td><td>2021年11月6日</td>
 </tr>
+<tr>
+<td>0.1.5.0</td><td>hive连接mysql提供jdbc；安装配置scala</td><td>2021年11月7日</td>
+</tr>
 </table>

@@ -22,6 +22,7 @@ for ((i=1; i<index; i++))
 do
   ssh root@slave${i} "jps"
 done
+hdfs dfsadmin -refreshNodes
 start-balancer.sh
 # 启动hive
 nohup hive --service metastore &
