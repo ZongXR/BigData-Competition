@@ -27,10 +27,10 @@ echo "*/30 10-17 * * * /usr/sbin/ntpdate master" >> /var/spool/cron/root
 mkdir -p /usr/java
 tar -zxvf ./jdk-8u171-linux-x64.tar.gz -C /usr/java
 # 配置zookeeper
-mkdir -p /usr/zookeeper
+mkdir -p /usr/zookeeper/zookeeper-3.4.10/conf
 tar -zxvf ./zookeeper-3.4.10.tar.gz -C /usr/zookeeper
 # 配置hadoop
-mkdir -p /usr/hadoop
+mkdir -p /usr/hadoop/hadoop-2.7.3/etc/hadoop
 tar -zxvf ./hadoop-2.7.3.tar.gz -C /usr/hadoop
 # 安装mysql
 yum localinstall -y mysql57-community-release-el7-11.noarch.rpm
@@ -42,8 +42,8 @@ systemctl start mysqld
 systemctl enable mysqld
 mysql_password=$(grep "temporary password" /var/log/mysqld.log | awk '{print $11}')
 touch ./mysql.sql
-echo 'set global validate_password_policy=0;' >> ./mysql.sql
-echo 'set global validate_password_length=4;' >> ./mysql.sql
+echo 'set global validate_password_policy = 0;' >> ./mysql.sql
+echo 'set global validate_password_length = 4;' >> ./mysql.sql
 echo "alter user 'root'@'localhost' identified by '123456';" >> ./mysql.sql
 echo "create user 'root'@'%' identified by '123456';" >> ./mysql.sql
 echo "grant all privileges on *.* to 'root'@'%' with grant option;" >> ./mysql.sql
@@ -57,13 +57,12 @@ echo 'export HADOOP_HOME=/usr/hadoop/hadoop-2.7.3' >> /usr/hive/apache-hive-2.1.
 echo 'export HIVE_CONF_DIR=/usr/hive/apache-hive-2.1.1-bin/conf' >> /usr/hive/apache-hive-2.1.1-bin/conf/hive-env.sh
 echo 'export HIVE_AUX_JARS_PATH=/usr/hive/apache-hive-2.1.1-bin/lib' >> /usr/hive/apache-hive-2.1.1-bin/conf/hive-env.sh
 cp /usr/hive/apache-hive-2.1.1-bin/lib/jline-2.12.jar /usr/hadoop/hadoop-2.7.3/share/hadoop/yarn/lib/
-cp ./hive/hive-slave.xml /usr/hive/apache-hive-2.1.1-bin/conf/hive-site.xml
 unzip -o -d ./ mysql-connector-java-5.1.47.zip
 cp ./mysql-connector-java-5.1.47/mysql-connector-java-5.1.47-bin.jar /usr/hive/apache-hive-2.1.1-bin/lib
-/usr/hive/apache-hive-2.1.1-bin/bin/schematool -dbType mysql -initSchema --verbose
 # 安装scala
 mkdir -p /usr/scala
 tar -zxvf  ./scala-2.10.6.tgz -C /usr/scala
-
-# 配置环境变量
+# 安装spark
+mkdir -p /usr/spark/spark-2.4.3-bin-hadoop2.7/conf
+tar -zxvf ./spark-2.4.3-bin-hadoop2.7.tgz -C /usr/spark
 

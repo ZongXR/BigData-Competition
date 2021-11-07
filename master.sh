@@ -103,13 +103,38 @@ echo 'export HADOOP_HOME=/usr/hadoop/hadoop-2.7.3' >> /usr/hive/apache-hive-2.1.
 echo 'export HIVE_CONF_DIR=/usr/hive/apache-hive-2.1.1-bin/conf' >> /usr/hive/apache-hive-2.1.1-bin/conf/hive-env.sh
 echo 'export HIVE_AUX_JARS_PATH=/usr/hive/apache-hive-2.1.1-bin/lib' >> /usr/hive/apache-hive-2.1.1-bin/conf/hive-env.sh
 cp /usr/hive/apache-hive-2.1.1-bin/lib/jline-2.12.jar /usr/hadoop/hadoop-2.7.3/share/hadoop/yarn/lib/
-cp ./hive/hive-master.xml /usr/hive/apache-hive-2.1.1-bin/conf/hive-site.xml
 unzip -o -d ./ mysql-connector-java-5.1.47.zip
 cp ./mysql-connector-java-5.1.47/mysql-connector-java-5.1.47-bin.jar /usr/hive/apache-hive-2.1.1-bin/lib
-/usr/hive/apache-hive-2.1.1-bin/bin/schematool -dbType mysql -initSchema --verbose
+cp ./hive/hive-master.xml /usr/hive/apache-hive-2.1.1-bin/conf/hive-site.xml
+for ((i=1; i<index; i++))
+do
+  sed -e "s/jdbc:mysql:\/\/slave/jdbc:mysql:\/\/slave$i/" ./hive/hive-slave.xml > ./hive/hive-slave$i.xml
+  scp ./hive/hive-slave$i.xml root@slave$i:/usr/hive/apache-hive-2.1.1-bin/conf/hive-site.xml
+  ssh root@slave${i} "/usr/hive/apache-hive-2.1.1-bin/bin/schematool -dbType mysql -initSchema --verbose"
+done
 # 安装scala
 mkdir -p /usr/scala
 tar -zxvf  ./scala-2.10.6.tgz -C /usr/scala
+# 安装spark
+mkdir -p /usr/spark
+tar -zxvf ./spark-2.4.3-bin-hadoop2.7.tgz -C /usr/spark
+cp /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh.template /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
+echo 'JAVA_HOME=/usr/java/jdk1.8.0_171' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
+echo 'SCALA_HOME=/usr/scala/scala-2.10.6' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
+echo 'HADOOP_HOME=/usr/hadoop/hadoop-2.7.3' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
+echo 'HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
+echo 'SPARK_MASTER_IP=master' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
+echo 'SPARK_WORKER_MEMORY=8g' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
+cp /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/slaves.template /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/slaves
+cat /dev/null > /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/slaves
+for ((i=1; i<index; i++))
+do
+  echo "slave$i" >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/slaves
+done
+for ((i=1; i<index; i++))
+do
+  scp -r /usr/spark/spark-2.4.3-bin-hadoop2.7/conf root@slave${i}:/usr/spark/spark-2.4.3-bin-hadoop2.7
+done
 # 配置环境变量
 echo '# timezone' >> /etc/profile
 echo "TZ='Asia/Shanghai'; export TZ" >> /etc/profile
@@ -130,6 +155,9 @@ echo 'export PATH=$PATH:$HIVE_HOME/bin' >> /etc/profile
 echo '# scala' >> /etc/profile
 echo 'export SCALA_HOME=/usr/scala/scala-2.10.6' >> /etc/profile
 echo 'export PATH=$PATH:$SCALA_HOME/bin' >> /etc/profile
+echo '# spark' >> /etc/profile
+echo 'export SPARK_HOME=/usr/spark/spark-2.4.3-bin-hadoop2.7' >> /etc/profile
+echo 'export PATH=$PATH:$SPARK_HOME/bin' >> /etc/profile
 echo 'unset MAILCHECK' >> /etc/profile
 source /etc/profile
 for ((i=1; i<index; i++))
