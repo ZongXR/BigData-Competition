@@ -1,5 +1,7 @@
 <h1>一键自动安装hadoop</h1>
 <img src="https://hadoop.apache.org/hadoop-logo.jpg" alt="hadoop">
+<img src="https://spark.apache.org/images/spark-logo-rev.svg" alt="spark" width="141" height="72">
+<img alt="Apache Hive" src="https://hive.apache.org/images/hive_logo_medium.jpg">
 <h2>关于此项目</h2>
 <h3>为什么做了这么一个项目？</h3>
 因为部分初学者对于安装配置大数据集群环境感到苦恼，所以做了这么一个解放人力的自动化脚本。能够省去安装过程中的诸多麻烦。
