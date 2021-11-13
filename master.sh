@@ -119,12 +119,13 @@ tar -zxvf  ./scala-2.10.6.tgz -C /usr/scala
 mkdir -p /usr/spark
 tar -zxvf ./spark-2.4.3-bin-hadoop2.7.tgz -C /usr/spark
 cp /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh.template /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
-echo 'JAVA_HOME=/usr/java/jdk1.8.0_171' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
-echo 'SCALA_HOME=/usr/scala/scala-2.10.6' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
-echo 'HADOOP_HOME=/usr/hadoop/hadoop-2.7.3' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
-echo 'HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
-echo 'SPARK_MASTER_IP=master' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
-echo 'SPARK_WORKER_MEMORY=8g' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
+echo 'export JAVA_HOME=/usr/java/jdk1.8.0_171' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
+echo 'export SCALA_HOME=/usr/scala/scala-2.10.6' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
+echo 'export HADOOP_HOME=/usr/hadoop/hadoop-2.7.3' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
+echo 'export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
+echo 'export SPARK_MASTER_IP=master' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
+echo 'export SPARK_WORKER_MEMORY=8g' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
+echo 'export SPARK_LOCAL_IP=127.0.0.1' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
 cp /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/slaves.template /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/slaves
 cat /dev/null > /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/slaves
 for ((i=1; i<index; i++))

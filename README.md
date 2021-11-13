@@ -118,4 +118,7 @@
 <tr>
 <td>0.1.6.0</td><td>修复若干bug；安装配置spark</td><td>2021年11月7日</td>
 </tr>
+<tr>
+<td>0.1.7.0</td><td>修复bug；spark启动失败</td><td>2021年11月13日</td>
+</tr>
 </table>
