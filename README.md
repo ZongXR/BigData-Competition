@@ -121,4 +121,7 @@
 <tr>
 <td>0.1.7.0</td><td>修复bug；spark启动失败</td><td>2021年11月13日</td>
 </tr>
+<tr>
+<td>0.1.8.0</td><td>修复bug；spark不显示web管理界面</td><td>2021年11月14日</td>
+</tr>
 </table>

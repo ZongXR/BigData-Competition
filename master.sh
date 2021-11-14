@@ -125,7 +125,6 @@ echo 'export HADOOP_HOME=/usr/hadoop/hadoop-2.7.3' >> /usr/spark/spark-2.4.3-bin
 echo 'export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
 echo 'export SPARK_MASTER_IP=master' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
 echo 'export SPARK_WORKER_MEMORY=8g' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
-echo 'export SPARK_LOCAL_IP=127.0.0.1' >> /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/spark-env.sh
 cp /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/slaves.template /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/slaves
 cat /dev/null > /usr/spark/spark-2.4.3-bin-hadoop2.7/conf/slaves
 for ((i=1; i<index; i++))
