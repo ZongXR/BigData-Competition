@@ -41,6 +41,11 @@ for ((i=1; i<index; i++))
 do
   scp /etc/hosts root@slave${i}:/etc/
 done
+# 设置从节点主机名
+for ((i=1; i<index; i++))
+do
+  ssh root@slave${i} "hostnamectl set-hostname slave$i"
+done
 # 配置时区
 tzselect
 # 设置时钟

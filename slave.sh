@@ -15,8 +15,6 @@ wget https://scala-lang.org/files/archive/scala-2.10.6.tgz
 wget https://archive.apache.org/dist/spark/spark-2.4.3/spark-2.4.3-bin-hadoop2.7.tgz
 
 # 基础环境配置
-# 配置主机名
-hostnamectl set-hostname slave
 # 关掉防火墙
 systemctl stop firewalld
 systemctl disable firewalld
