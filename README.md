@@ -35,6 +35,11 @@
 安装完毕后，对于主节点执行以下代码<br />
 <code>./start-master.sh</code>
 </li>
+<li>
+运行com.spark.test.WordCount<br />
+或者使用maven打jar包，将jar包上传至master节点。通过以下命令运行<br />
+<code>spark-submit --class com.spark.test.WordCount ./WordCount-1.0-SNAPSHOT.jar</code>
+</li>
 </ol>
 <h2>怎么算部署成功了?</h2>
 所有节点运行<code>jps</code>命令，与下表后台任务对照，对照一致则成功。
@@ -129,5 +134,8 @@
 </tr>
 <tr>
 <td>1.0.0.0</td><td>scala版本改为2.11.11</td><td>2021年11月16日</td>
+</tr>
+<tr>
+<td>1.1.0.0</td><td>添加WordCount的Spark任务</td><td>2021年11月17日</td>
 </tr>
 </table>
