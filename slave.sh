@@ -11,7 +11,7 @@ wget https://archive.apache.org/dist/hadoop/core/hadoop-2.7.3/hadoop-2.7.3.tar.g
 wget https://repo.mysql.com/mysql57-community-release-el7-11.noarch.rpm
 wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.47.zip
 wget https://archive.apache.org/dist/hive/hive-2.1.1/apache-hive-2.1.1-bin.tar.gz
-wget https://scala-lang.org/files/archive/scala-2.10.6.tgz
+wget https://scala-lang.org/files/archive/scala-2.11.11.tgz
 wget https://archive.apache.org/dist/spark/spark-2.4.3/spark-2.4.3-bin-hadoop2.7.tgz
 
 # 基础环境配置
@@ -59,7 +59,7 @@ unzip -o -d ./ mysql-connector-java-5.1.47.zip
 cp ./mysql-connector-java-5.1.47/mysql-connector-java-5.1.47-bin.jar /usr/hive/apache-hive-2.1.1-bin/lib
 # 安装scala
 mkdir -p /usr/scala
-tar -zxvf  ./scala-2.10.6.tgz -C /usr/scala
+tar -zxvf  ./scala-2.11.11.tgz -C /usr/scala
 # 安装spark
 mkdir -p /usr/spark/spark-2.4.3-bin-hadoop2.7/conf
 tar -zxvf ./spark-2.4.3-bin-hadoop2.7.tgz -C /usr/spark
