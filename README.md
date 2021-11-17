@@ -141,6 +141,9 @@
 <tr>
 <td>1.2.0.0</td><td>通过RDD的方式执行WordCount任务</td><td>2021年11月17日</td>
 </tr>
+<tr>
+<td>1.3.0.0</td><td>通过DataFrame的方式执行WordCount任务</td><td>2021年11月17日</td>
+</tr>
 </table>
 <h2>项目经验</h2>
 <ol>
