@@ -138,4 +138,12 @@
 <tr>
 <td>1.1.0.0</td><td>添加WordCount的Spark任务</td><td>2021年11月17日</td>
 </tr>
+<tr>
+<td>1.2.0.0</td><td>通过RDD的方式执行WordCount任务</td><td>2021年11月17日</td>
+</tr>
 </table>
+<h2>项目经验</h2>
+<ol>
+<li>安装的时候尽量避免多次<code>hadoop namenode -format</code>因为重复格式化会造成主从节点的数据版本号不一致，需要修改一致了才能正常运行。</li>
+<li>如果scala运行时莫名其妙报错Exception in thread "main" org.apache.spark.SparkException，可以先打包再运行试试</li>
+</ol>
