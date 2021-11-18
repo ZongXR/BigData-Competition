@@ -17,6 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
+        <hadoop.version>2.7.3</hadoop.version>
         <scala.binary.version>2.11</scala.binary.version>
         <scala.version>2.11.11</scala.version>
         <spark.version>2.4.3</spark.version>
@@ -63,6 +64,11 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-graphx_${scala.binary.version}</artifactId>
             <version>${spark.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>${hadoop.version}</version>
         </dependency>
     </dependencies>
 

@@ -38,7 +38,7 @@
 <li>
 运行com.spark.test.WordCount<br />
 或者使用maven打jar包，将jar包上传至master节点。通过以下命令运行<br />
-<code>spark-submit --class com.spark.test.WordCount ./WordCount-1.0-SNAPSHOT.jar</code>
+<code>spark-submit --class com.spark.test.WordCount ./WordCount-1.0-SNAPSHOT.jar 你的文件路径</code>
 </li>
 </ol>
 <h2>怎么算部署成功了?</h2>
@@ -144,9 +144,13 @@
 <tr>
 <td>1.3.0.0</td><td>通过DataFrame的方式执行WordCount任务</td><td>2021年11月17日</td>
 </tr>
+<tr>
+<td>1.3.1.0</td><td>优化执行方式；添加hadoop-client依赖</td><td>2021年11月17日</td>
+</tr>
 </table>
 <h2>项目经验</h2>
 <ol>
 <li>安装的时候尽量避免多次<code>hadoop namenode -format</code>因为重复格式化会造成主从节点的数据版本号不一致，需要修改一致了才能正常运行。</li>
 <li>如果scala运行时莫名其妙报错Exception in thread "main" org.apache.spark.SparkException，可以先打包再运行试试</li>
+<li>如果直接在IDEA中调试spark，需要加上conf.setJars和conf.setIfMissing并保证开发环境与spark环境能互相ping通。否则会报WARN TaskSchedulerImpl: Initial job has not accepted any resources</li>
 </ol>
