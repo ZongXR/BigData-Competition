@@ -147,10 +147,14 @@
 <tr>
 <td>1.3.1.0</td><td>优化执行方式；添加hadoop-client依赖</td><td>2021年11月17日</td>
 </tr>
+<tr>
+<td>1.4.0.0</td><td>添加电信基站案例</td><td>2021年11月20日</td>
+</tr>
 </table>
 <h2>项目经验</h2>
 <ol>
 <li>安装的时候尽量避免多次<code>hadoop namenode -format</code>因为重复格式化会造成主从节点的数据版本号不一致，需要修改一致了才能正常运行。</li>
-<li>如果scala运行时莫名其妙报错Exception in thread "main" org.apache.spark.SparkException，可以先打包再运行试试</li>
+<li>如果scala运行时莫名其妙报错Exception in thread "main" org.apache.spark.SparkException，可以先打包再运行试试。并且建议IDEA直接连接spark调试每次运行前都打包，否则结果可能和代码不一致。使用spark-submit没这个问题</li>
 <li>如果直接在IDEA中调试spark，需要加上conf.setJars和conf.setIfMissing并保证开发环境与spark环境能互相ping通。否则会报WARN TaskSchedulerImpl: Initial job has not accepted any resources</li>
+<li>map是对每一个元素进行操作；flatMap是对每一个元素操作后再展平，仅适用于返回结果是List或元组</li>
 </ol>

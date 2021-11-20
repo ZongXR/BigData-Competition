@@ -8,7 +8,7 @@ object WordCount {
     val conf = new SparkConf()
     conf.setAppName("Word Count")
 //    conf.setMaster("spark://192.168.137.181:7077")
-//    conf.setJars(List("target/WordCount-1.0-SNAPSHOT.jar"))
+//    conf.setJars(List("target/SparkTest-1.0-SNAPSHOT.jar"))
 //    conf.setIfMissing("spark.driver.host", "192.168.1.107")
     val filePath = args(0)
     val session = SparkSession.builder.config(conf).getOrCreate()
