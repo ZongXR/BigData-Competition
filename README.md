@@ -150,6 +150,9 @@
 <tr>
 <td>1.4.0.0</td><td>添加电信基站案例</td><td>2021年11月20日</td>
 </tr>
+<tr>
+<td>1.4.1.0</td><td>禁用hdfs权限，dfs.permissions设置false</td><td>2021年11月20日</td>
+</tr>
 </table>
 <h2>项目经验</h2>
 <ol>

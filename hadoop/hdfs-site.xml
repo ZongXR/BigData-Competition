@@ -22,6 +22,10 @@
 		<value>2</value>
 	</property>
 	<property>
+		<name>dfs.permissions</name>
+		<value>false</value>
+	</property>
+	<property>
 		<name>dfs.namenode.name.dir</name>
 		<value>file:/usr/hadoop/hadoop-2.7.3/hdfs/name</value>
 	</property>
