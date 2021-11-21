@@ -1,4 +1,4 @@
-<h1>一键自动安装hadoop</h1>
+<h1>一键自动安装大数据集群</h1>
 <img src="https://hadoop.apache.org/hadoop-logo.jpg" alt="hadoop">
 <img src="https://spark.apache.org/images/spark-logo-rev.svg" alt="spark" width="141" height="72">
 <img alt="Apache Hive" src="https://hive.apache.org/images/hive_logo_medium.jpg">
@@ -160,4 +160,5 @@
 <li>如果scala运行时莫名其妙报错Exception in thread "main" org.apache.spark.SparkException，可以先打包再运行试试。并且建议IDEA直接连接spark调试每次运行前都打包，否则结果可能和代码不一致。使用spark-submit没这个问题</li>
 <li>如果直接在IDEA中调试spark，需要加上conf.setJars和conf.setIfMissing并保证开发环境与spark环境能互相ping通。否则会报WARN TaskSchedulerImpl: Initial job has not accepted any resources</li>
 <li>map是对每一个元素进行操作；flatMap是对每一个元素操作后再展平，仅适用于返回结果是List或元组</li>
+<li>sortBy是对x扩展出来的矩阵按照某一列排序，而不是对x排序</li>
 </ol>
