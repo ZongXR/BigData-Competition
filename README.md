@@ -153,12 +153,16 @@
 <tr>
 <td>1.4.1.0</td><td>禁用hdfs权限，dfs.permissions设置false</td><td>2021年11月20日</td>
 </tr>
+<tr>
+<td>1.5.0.0</td><td>添加JsonFile案例</td><td>2021年11月21日</td>
+</tr>
 </table>
 <h2>项目经验</h2>
 <ol>
 <li>安装的时候尽量避免多次<code>hadoop namenode -format</code>因为重复格式化会造成主从节点的数据版本号不一致，需要修改一致了才能正常运行。</li>
 <li>如果scala运行时莫名其妙报错Exception in thread "main" org.apache.spark.SparkException，可以先打包再运行试试。并且建议IDEA直接连接spark调试每次运行前都打包，否则结果可能和代码不一致。使用spark-submit没这个问题</li>
 <li>如果直接在IDEA中调试spark，需要加上conf.setJars和conf.setIfMissing并保证开发环境与spark环境能互相ping通。否则会报WARN TaskSchedulerImpl: Initial job has not accepted any resources</li>
-<li>map是对每一个元素进行操作；flatMap是对每一个元素操作后再展平，仅适用于返回结果是List或元组</li>
+<li>map是对每一个元素进行操作；flatMap是对每一个元素操作后再展平，仅适用于返回结果是List或元组；mapPartitions是对每一个分片进行处理，输入输出是整个分片对应的iterator；mapPartitionsWithIndex是在此基础上增加分区号；mapValues搭配分组使用，输入是每组value组成的一个元组</li>
+<li>groupByKey输出value是同组各value组成的元组；groupBy输出的value是同一组的key, value；分组与聚合总体的输出包含key</li>
 <li>sortBy是对x扩展出来的矩阵按照某一列排序，而不是对x排序</li>
 </ol>
