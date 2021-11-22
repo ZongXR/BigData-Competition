@@ -8,12 +8,10 @@ object BaseStation {
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf()
     conf.setAppName("BaseStation")
-    conf.setMaster("spark://192.168.137.181:7077")
-    conf.setJars(List("target/SparkTest-1.0-SNAPSHOT.jar"))
-    conf.setIfMissing("spark.driver.host", "192.168.1.107")
+    conf.setMaster("local[*]")
 
     val sc = new SparkContext(conf)
-    val rdd = sc.textFile("hdfs://192.168.137.181:9000/home/drzon/text")
+    val rdd = sc.textFile("C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\text")
     val rdd1 = rdd.map(x => {
       val words = x.split(",")
       val phone = words(0)
@@ -40,7 +38,7 @@ object BaseStation {
       (phoneLac._2, (phoneLac._1, time))
     })
 
-    val loc = sc.textFile("hdfs://192.168.137.181:9000/home/drzon/loc_info")
+    val loc = sc.textFile("C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\loc_info")
 
     val lac1 = loc.map(x => {
       val words = x.split(",")
@@ -75,7 +73,7 @@ object BaseStation {
       x.productIterator.mkString(",")
     })
 
-    rdd9.saveAsTextFile("hdfs://192.168.137.181:9000/home/drzon/out1")
+    rdd9.saveAsTextFile("C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\out1")
 
     println(rdd9.collect().toList)
     sc.stop()

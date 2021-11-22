@@ -131,3 +131,4 @@ dmypy.json
 /.idea
 /.gitignore
 /target
+/data/out1

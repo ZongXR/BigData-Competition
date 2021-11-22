@@ -156,6 +156,9 @@
 <tr>
 <td>1.5.0.0</td><td>添加JsonFile案例</td><td>2021年11月21日</td>
 </tr>
+<tr>
+<td>1.6.0.0</td><td>添加Dataset案例</td><td>2021年11月22日</td>
+</tr>
 </table>
 <h2>项目经验</h2>
 <ol>
