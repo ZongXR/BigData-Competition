@@ -15,6 +15,7 @@ object TaobaoData {
     val filePath = "C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\taobao100.csv"
 
     // RDD实现
+    /*
     val sc = new SparkContext(conf)
     sc.setLogLevel("WARN")
     val rdd = sc.textFile(filePath)
@@ -41,21 +42,65 @@ object TaobaoData {
     val dealNum = rdd2.groupBy(_._5).mapValues(x => x.toList.count(x => x._3 == 4)).top(20)(Ordering.by[(Date,Int),Int](x => x._2))
 
     println(dealNum.toList)
+    sc.stop()
+    */
 
-//    val spark = SparkSession.builder().config(conf).getOrCreate()
-//    val df = spark.read.option("header", value = true).csv(filePath)
-//    df.createOrReplaceTempView("user")
-//    val sql =
-//      """
-//        |select user_id,
-//        |count(1) as cnt
-//        |from user
-//        |group by user_id
-//        |order by cnt desc
-//        |""".stripMargin
-//    val df1 = spark.sql(sql)
-//
-//    println(df1.show())
+    val spark = SparkSession.builder().config(conf).getOrCreate()
+    spark.sparkContext.setLogLevel("WARN")
+    val df = spark.read.option("header", value = true).csv(filePath)
+    df.createOrReplaceTempView("user")
+    // 每个用户访问次数前50
+    var sql =
+      """
+        |select user_id,
+        |count(1) as cnt
+        |from user
+        |group by user_id
+        |order by cnt desc limit 50
+        |""".stripMargin
+    // 统计独立用户数
+    sql =
+      """
+        |select count(1) as cnt
+        |from (select distinct user_id from user) as unique_user
+        |""".stripMargin
+    // 统计商品被购买次数
+    sql =
+      """
+        |select item_id,
+        |count(1) as cnt
+        |from user
+        |where behavior_type = '4'
+        |group by item_id
+        |order by cnt desc
+        |limit 20
+        |""".stripMargin
+    // 统计商品被收藏的次数
+    sql =
+      """
+        |select item_id,
+        |count(1) as cnt
+        |from user
+        |where behavior_type = 3
+        |group by item_id
+        |order by cnt desc
+        |limit 20
+        |""".stripMargin
+    // 统计成交量top20
+    sql =
+      """
+        |select date,
+        |count(1) as cnt
+        |from user
+        |where behavior_type = 4
+        |group by date
+        |order by cnt desc
+        |limit 20
+        |""".stripMargin
+
+    val df2 = spark.sql(sql)
+    df2.show()
+    spark.stop()
   }
 
   def strToDate(strDate: String): Date ={
