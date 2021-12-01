@@ -2,7 +2,7 @@ package com.spark.test
 
 import java.text.SimpleDateFormat
 
-import org.apache.spark.sql.{Dataset, Encoders, SparkSession}
+import org.apache.spark.sql.{Dataset, Encoders, Row, SparkSession}
 import java.util.Date
 import java.sql.Date
 
@@ -48,6 +48,7 @@ object TaobaoData {
     */
 
     // Spark SQL实现
+
     val spark = SparkSession.builder().config(conf).getOrCreate()
     spark.sparkContext.setLogLevel("WARN")
     import spark.implicits._
@@ -106,6 +107,29 @@ object TaobaoData {
     val df2 = spark.sql(sql)
     df2.show()
     spark.stop()
+
+
+
+    // Dataset实现
+    /*
+    val spark = SparkSession.builder().config(conf).getOrCreate()
+    spark.sparkContext.setLogLevel("WARN")
+    import spark.implicits._
+    val schema = Encoders.product[User].schema
+    val user: Dataset[User] = spark.read.option("header", value = true).option("sep", ",").option("dateFormat", "yyyy/MM/d").schema(schema).csv(filePath).as[User]
+    // 每个用户访问次数前50
+    val ds1: Dataset[Row] = user.groupBy("user_id").count().orderBy($"count".desc).limit(50)
+    // 统计独立用户数
+    val userNum: Long = user.map(x => x.user_id).distinct().count()
+    // 统计商品被购买次数
+    val ds3: Dataset[Row] = user.filter(x => x.behavior_type == 4).groupBy("item_id").count().orderBy($"count".desc).limit(20)
+    // 统计商品被收藏次数
+    val ds4: Dataset[Row] = user.filter(x => x.behavior_type == 3).groupBy("item_id").count().orderBy($"count".desc).limit(20)
+    // 统计日成交量top20
+    val ds5: Dataset[Row] = user.filter(x => x.behavior_type == 4).groupBy("date").count().orderBy($"count".desc).limit(20)
+
+    ds5.show()
+     */
   }
 
   def strToDate(strDate: String): java.util.Date ={
