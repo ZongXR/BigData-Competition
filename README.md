@@ -168,6 +168,9 @@
 <tr>
 <td>1.8.1.0</td><td>新增淘宝数据案例的DataFrame实现</td><td>2021年11月30日</td>
 </tr>
+<tr>
+<td>1.9.0.0</td><td>WordCount案例分别使用RDD, Dataset, Spark SQL三种方式实现；淘宝数据案例使用RDD, Spark SQL实现</td><td>2021年12月1日</td>
+</tr>
 </table>
 <h2>项目经验</h2>
 <ol>

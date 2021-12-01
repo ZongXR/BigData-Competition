@@ -2,9 +2,11 @@ package com.spark.test
 
 import java.text.SimpleDateFormat
 
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{Dataset, Encoders, SparkSession}
 import java.util.Date
+import java.sql.Date
 
+import org.apache.spark.sql.types.{DateType, IntegerType, StringType, StructField, StructType}
 import org.apache.spark.{SparkConf, SparkContext}
 
 object TaobaoData {
@@ -45,10 +47,13 @@ object TaobaoData {
     sc.stop()
     */
 
+    // Spark SQL实现
     val spark = SparkSession.builder().config(conf).getOrCreate()
     spark.sparkContext.setLogLevel("WARN")
-    val df = spark.read.option("header", value = true).csv(filePath)
-    df.createOrReplaceTempView("user")
+    import spark.implicits._
+    val schema = Encoders.product[User].schema
+    val user: Dataset[User] = spark.read.option("header", value = true).option("sep", ",").option("dateFormat", "yyyy/MM/d").schema(schema).csv(filePath).as[User]
+    user.createOrReplaceTempView("user")
     // 每个用户访问次数前50
     var sql =
       """
@@ -70,7 +75,7 @@ object TaobaoData {
         |select item_id,
         |count(1) as cnt
         |from user
-        |where behavior_type = '4'
+        |where behavior_type = 4
         |group by item_id
         |order by cnt desc
         |limit 20
@@ -103,9 +108,19 @@ object TaobaoData {
     spark.stop()
   }
 
-  def strToDate(strDate: String): Date ={
+  def strToDate(strDate: String): java.util.Date ={
     val format = new SimpleDateFormat("yyyy/MM/d")
     return format.parse(strDate)
   }
 
 }
+
+
+case class User(
+               user_id: String,
+               item_id: String,
+               behavior_type: Int,
+               item_category: String,
+               date: java.sql.Date,
+               hour: Int
+               )
