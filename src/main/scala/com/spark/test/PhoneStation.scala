@@ -2,7 +2,9 @@ package com.spark.test
 
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.sql.Date
 
+import org.apache.spark.sql.{DataFrame, Dataset, Encoders, SparkSession}
 import org.apache.spark.{SparkConf, SparkContext}
 
 object PhoneStation {
@@ -11,11 +13,18 @@ object PhoneStation {
     conf.setMaster("local[*]")
     conf.setAppName("PhoneStation")
 
+    val locPath = "C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\loc"
+    val stationAPath = "C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\baseA"
+    val stationBPath = "C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\baseB"
+    val stationCPath = "C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\baseC"
+
+    // RDD做法
+    /*
     val sc = new SparkContext(conf)
-    val loc = sc.textFile("C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\loc")
-    val stationA = sc.textFile("C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\baseA")
-    val stationB = sc.textFile("C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\baseB")
-    val stationC = sc.textFile("C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\baseC")
+    val loc = sc.textFile(locPath)
+    val stationA = sc.textFile(stationAPath)
+    val stationB = sc.textFile(stationBPath)
+    val stationC = sc.textFile(stationCPath)
 
     val station = stationA.union(stationB).union(stationC)
     val rdd1 = station.map(x => this.readLine(x))
@@ -57,6 +66,67 @@ object PhoneStation {
     println(rdd12.collect().toList)
     rdd12.saveAsTextFile("C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\result")
     sc.stop()
+     */
+
+    // SparkSQL做法
+    val spark = SparkSession.builder().config(conf).getOrCreate()
+    import spark.implicits._
+    val schemaStation = Encoders.product[Station].schema
+    val schemaRela = Encoders.product[UserStationRela].schema
+    val loc: Dataset[Station] = spark.read.option("header", value = false).option("sep", ",").schema(schemaStation).csv(locPath).as[Station]
+    loc.createOrReplaceTempView("loc")
+
+    val relaA: Dataset[UserStationRela] = spark.read.option("header", value = false).option("sep", ",").option("timestampFormat", "yyyyMMddHHmmss").schema(schemaRela).csv(stationAPath).as[UserStationRela]
+    val relaB: Dataset[UserStationRela] = spark.read.option("header", value = false).option("sep", ",").option("timestampFormat", "yyyyMMddHHmmss").schema(schemaRela).csv(stationBPath).as[UserStationRela]
+    val relaC: Dataset[UserStationRela] = spark.read.option("header", value = false).option("sep", ",").option("timestampFormat", "yyyyMMddHHmmss").schema(schemaRela).csv(stationCPath).as[UserStationRela]
+    val rela: Dataset[UserStationRela] = relaA.union(relaB).union(relaC)
+    rela.createOrReplaceTempView("rela")
+
+    val sql =
+      """
+        |select phoneNum,
+        |second,
+        |longitude,
+        |latitude
+        |from loc as l
+        |inner join (
+        |select t.phoneNum as phoneNum,
+        |t.stationId as stationId,
+        |t.second as second
+        |from (
+        |select phoneNum,
+        |stationId,
+        |second,
+        |row_number() over(partition by phoneNum order by second desc) as rr
+        |from (
+        |select phoneNum,
+        |stationId,
+        |sum(second_stamp) as second
+        |from (
+        |(select phoneNum,
+        |-to_unix_timestamp(date) as second_stamp,
+        |stationId
+        |from rela
+        |where isIn = 1
+        |) union (
+        |select phoneNum,
+        |to_unix_timestamp(date) as second_stamp,
+        |stationId
+        |from rela
+        |where isIn = 0
+        |)
+        |)
+        |group by phoneNum, stationId
+        |)
+        |) as t
+        |where t.rr <= 2
+        |) as r
+        |on l.stationId = r.stationId
+        |""".stripMargin
+
+    val df: DataFrame = spark.sql(sql)
+    df.show()
+    spark.stop()
   }
 
   /**
@@ -90,9 +160,9 @@ object PhoneStation {
    * @param word 字符串
    * @return 日期
    */
-  def str2Time(word: String): Date ={
+  def str2Time(word: String): java.util.Date ={
     val format = new SimpleDateFormat("yyyyMMddHHmmss")
-    val date: Date = format.parse(word)
+    val date: java.util.Date = format.parse(word)
     return date
   }
 
@@ -102,9 +172,24 @@ object PhoneStation {
    * @param late 较晚日期
    * @return 相差秒数
    */
-  def getDeltaSeconds(early: Date, late: Date): Long ={
+  def getDeltaSeconds(early: java.util.Date, late: java.util.Date): Long ={
     val l = late.getTime() - early.getTime()
     return l / 1000
   }
 
 }
+
+
+case class Station(
+                  stationId: String,
+                  longitude: Double,
+                  latitude: Double
+                  )
+
+
+case class UserStationRela(
+                          phoneNum: String,
+                          date: java.sql.Timestamp,
+                          stationId: String,
+                          isIn: Int
+                          )

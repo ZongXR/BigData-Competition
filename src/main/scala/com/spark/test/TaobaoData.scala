@@ -129,6 +129,7 @@ object TaobaoData {
     val ds5: Dataset[Row] = user.filter(x => x.behavior_type == 4).groupBy("date").count().orderBy($"count".desc).limit(20)
 
     ds5.show()
+    spark.stop()
      */
   }
 
