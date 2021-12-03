@@ -4,8 +4,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.sql.Date
 
-import org.apache.spark.sql.{DataFrame, Dataset, Encoders, SparkSession}
+import org.apache.spark.sql.expressions.Window
+import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.{DataFrame, Dataset, Encoders, Row, SparkSession}
 import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.functions._
 
 object PhoneStation {
   def main(args: Array[String]): Unit = {
@@ -69,6 +72,7 @@ object PhoneStation {
      */
 
     // SparkSQL做法
+    /*
     val spark = SparkSession.builder().config(conf).getOrCreate()
     import spark.implicits._
     val schemaStation = Encoders.product[Station].schema
@@ -127,6 +131,39 @@ object PhoneStation {
     val df: DataFrame = spark.sql(sql)
     df.show()
     spark.stop()
+     */
+
+    // DataFrame做法
+    val spark = SparkSession.builder().config(conf).getOrCreate()
+    import spark.implicits._
+    val schemaStation: StructType = Encoders.product[Station].schema
+    val schemaRela: StructType = Encoders.product[UserStationRela].schema
+    val station: Dataset[Station] = spark.read.option("header", value = false).option("sep", ",").schema(schemaStation).csv(locPath).as[Station]
+    val relaA: Dataset[Row] = spark.read.option("header", value = false).option("sep", ",").option("timestampFormat", "yyyyMMddHHmmss").schema(schemaRela).csv(stationAPath)
+    val relaB: Dataset[Row] = spark.read.option("header", value = false).option("sep", ",").option("timestampFormat", "yyyyMMddHHmmss").schema(schemaRela).csv(stationBPath)
+    val relaC: Dataset[Row] = spark.read.option("header", value = false).option("sep", ",").option("timestampFormat", "yyyyMMddHHmmss").schema(schemaRela).csv(stationCPath)
+
+    val rela = relaA.union(relaB).union(relaC)
+    val ds1: Dataset[(String, Long, String, Int)] = rela.map(x => {
+      if (x.getInt(3) == 0)
+        (x.getString(0), x.getTimestamp(1).getTime, x.getString(2), x.getInt(3))
+      else
+        (x.getString(0), -x.getTimestamp(1).getTime, x.getString(2), x.getInt(3))
+    })
+    val ds2: DataFrame = ds1.groupBy("_1", "_3").agg(sum("_2") as "_2")
+    val ds3: DataFrame = station.join(ds2, station("stationId") === ds2("_3"), "inner")
+    val ds4 = ds3.map(x => {
+      (x.getString(3), x.getString(0), x.getDouble(1), x.getDouble(2), x.getLong(5))
+    })
+    val ds5 = ds4.withColumn("rr", row_number().over(Window.partitionBy("_1").orderBy($"_5".desc)))
+    val ds6 = ds5.where(ds5("rr") <= 2)
+    val ds7 = ds6.map(x => {
+      (x.getString(0), x.getDouble(2), x.getDouble(3), x.getLong(4))
+    })
+
+    ds7.show()
+    spark.stop()
+
   }
 
   /**

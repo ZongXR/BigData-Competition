@@ -177,6 +177,9 @@
 <tr>
 <td>1.10.0.0</td><td>通过SparkSQL实现手机基站案例</td><td>2021年12月2日</td>
 </tr>
+<tr>
+<td>1.10.1.0</td><td>通过DataFrame实现手机基站案例</td><td>2021年12月3日</td>
+</tr>
 </table>
 <h2>项目经验</h2>
 <ol>
@@ -186,5 +189,7 @@
 <li>map是对每一个元素进行操作；flatMap是对每一个元素操作后再展平，仅适用于返回结果是List或元组；mapPartitions是对每一个分片进行处理，输入输出是整个分片对应的iterator；mapPartitionsWithIndex是在此基础上增加分区号；mapValues搭配分组使用，输入是每组value组成的一个元组</li>
 <li>groupByKey输出value是同组各value组成的元组；groupBy输出的value是同一组的key, value；分组与聚合总体的输出包含key</li>
 <li>sortBy是对x扩展出来的矩阵按照某一列排序，而不是对x排序</li>
-<li>在hadoop的map-reduce中，map相当于对每个元素操作，shuffle相当于分组，reduce相当于聚合/li>
+<li>在hadoop的map-reduce中，map相当于对每个元素操作，shuffle相当于分组，reduce相当于聚合</li>
+<li>如果用Dataset读取表读取到一堆null，有可能是数据类型与schema给定类型不一致</li>
+<li>如果涉及到列的类型变化的适合用RDD做法和DataFrame做法，如果都是SQL的常用操作适合使用Spark SQL做法，如果只有一列适合用RDD做法</li>
 </ol>
