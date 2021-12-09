@@ -4,6 +4,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.types.{DateType, FloatType, IntegerType, LongType, StringType, StructField, StructType}
 
 object DatasetDemo {
   def main(args: Array[String]): Unit = {
@@ -16,8 +17,11 @@ object DatasetDemo {
     import spark.implicits._
 
     val df: DataFrame = spark.read.json("C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\emp.json")
-    val ds: Dataset[Emp] = df.as[Emp]       // 将DataFrame转为Dataset
 
+    // 将DataFrame转为Dataset
+    val ds: Dataset[Emp] = df.as[Emp]
+
+    //    Dataset转DataFrame
     val df1: DataFrame = ds.select(
       ds("name"),
       current_date(),
@@ -46,13 +50,26 @@ object DatasetDemo {
         |""".stripMargin)
     df3.show()
 
+    // Dataset转RDD
     val rdd: RDD[Emp] = ds.rdd
     println(rdd.collect().toList)
 
+    // DataFrame转RDD
     val rdd3: RDD[Row] = df3.rdd
     println(rdd3.collect().toList)
 
+    // RDD转Dataset
     rdd.toDS().show()
+
+    // RDD转DataFrame
+    rdd.toDF().show()
+    val schema = StructType(Array(
+      StructField("name",StringType,nullable = true),
+      StructField("c_date",DateType,nullable = true),
+      StructField("salary",LongType,nullable = true),
+      StructField("gender",StringType,nullable = true)
+    ))
+    spark.createDataFrame(rdd3, schema).show()
 
     spark.stop()
   }

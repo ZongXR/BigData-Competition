@@ -23,8 +23,6 @@ object JsonFile {
     this.saveFile(students, "hdfs://192.168.137.181:9000/home/drzon/out.json")
   }
 
-  case class Student(name: String, study: Boolean)
-
   def readJson(path: String): RDD[Student] ={
     val file = sc.textFile(path)
     val rdd = file.map(x => JSON.parseFull(x))
@@ -51,3 +49,7 @@ object JsonFile {
     stus.saveAsTextFile(path)
   }
 }
+
+
+case class Student(name: String, study: Boolean)
+
