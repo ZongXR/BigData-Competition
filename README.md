@@ -183,6 +183,9 @@
 <tr>
 <td>1.10.2.0</td><td>补充RDD[Row]转DataFrame方法</td><td>2021年12月9日</td>
 </tr>
+<tr>
+<td>1.11.0.0</td><td>补充身高年龄案例</td><td>2021年12月11日</td>
+</tr>
 </table>
 <h2>项目经验</h2>
 <ol>
