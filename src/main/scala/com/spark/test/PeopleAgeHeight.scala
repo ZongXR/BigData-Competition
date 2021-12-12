@@ -1,6 +1,7 @@
 package com.spark.test
 
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.{SparkConf, SparkContext}
 
 object PeopleAgeHeight {
@@ -9,6 +10,7 @@ object PeopleAgeHeight {
     conf.setAppName("PeopleAgeHeight")
     conf.setMaster("local[*]")
 
+    /*
     val sc = new SparkContext(conf)
     sc.setLogLevel("WARN")
 
@@ -44,7 +46,94 @@ object PeopleAgeHeight {
     println(male50Heights.sum(), male50Heights.mean())
 
     sc.stop()
+     */
 
+    val spark = SparkSession.builder().config(conf).getOrCreate()
+    import spark.implicits._
+    spark.sparkContext.setLogLevel("WARN")
+
+    //    将1、2题目中的数据，按编号进行关联join
+    val ages = spark.read.textFile("C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\peopleage.txt")
+    val ages1 = ages.map(x => {
+      val words = x.split(" ")
+      (words(0).toInt, words(1).toInt)
+    })    // id, age
+    ages1.createOrReplaceTempView("ages")
+
+    val heights = spark.read.textFile("C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\peopleinfo.txt")
+    val heights1 = heights.map(x => {
+      val words = x.split(" ")
+      (words(0).toInt, words(1), words(2).toInt)
+    })    // id, gender, height
+    heights1.createOrReplaceTempView("heights")
+
+    //    将1、2题目中的数据，按编号进行关联join
+    val sql1 =
+      """
+        |select a._1 as id,
+        |a._2 as age,
+        |h._2 as gender,
+        |h._3 as height
+        |from ages as a
+        |inner join heights as h
+        |on h._1 = a._1
+        |""".stripMargin
+    val df = spark.sql(sql1)
+    df.createOrReplaceTempView("data")
+    df.show()
+
+    //      2. 统计女性年龄最多的年龄下，平均身高
+    val sql2 =
+      """
+        |select avg(height) as avg_height
+        |from (
+        |select *,
+        |rank(age) over(order by age desc) as rnk
+        |from data
+        |where gender = 'F'
+        |)
+        |where rnk = 1
+        |""".stripMargin
+    spark.sql(sql2).show()
+
+    //    3. 同年龄下，男性比女性的平均身高高多少
+    val sql3 =
+      """
+        |select m.age,
+        |(male_height - female_height) as height_delta
+        |from (
+        |select age,
+        |avg(height) as male_height
+        |from data
+        |where gender = 'M'
+        |group by age
+        |order by age
+        |) as m
+        |inner join (
+        |select age,
+        |avg(height) as female_height
+        |from data
+        |where gender = 'F'
+        |group by age
+        |order by age
+        |) as f
+        |on m.age = f.age
+        |order by age
+        |""".stripMargin
+    spark.sql(sql3).show()
+
+    //    4. 年龄超过50岁，性别为男的，身高总和为多少，平均身高为多少
+    val sql4 =
+      """
+        |select sum(height) as sum_height,
+        |avg(height) as avg_height
+        |from data
+        |where age > 50
+        |and gender = 'M'
+        |""".stripMargin
+    spark.sql(sql4).show()
+
+    spark.stop()
   }
 
 }

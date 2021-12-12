@@ -76,6 +76,7 @@ object BaseStation {
     rdd9.saveAsTextFile("C:\\Users\\DrZon\\IdeaProjects\\Install-BigData\\data\\out1")
 
     println(rdd9.collect().toList)
+
     sc.stop()
   }
 
