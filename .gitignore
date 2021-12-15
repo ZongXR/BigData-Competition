@@ -133,3 +133,4 @@ dmypy.json
 /target
 /data/out1
 /data/result
+/data/wordcount/output1

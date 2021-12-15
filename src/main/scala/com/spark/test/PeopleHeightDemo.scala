@@ -12,7 +12,7 @@ object PeopleHeightDemo {
     conf.setAppName("PeopleInfoDemo")
     conf.setMaster("local[*]")
 
-    /*
+
     val sc = new SparkContext(conf)
     sc.setLogLevel("WARN")
 
@@ -80,8 +80,10 @@ object PeopleHeightDemo {
     println(lower, higher)
 
     sc.stop()
-     */
 
+
+
+    /*
     val spark = SparkSession.builder().config(conf).getOrCreate()
     spark.sparkContext.setLogLevel("WARN")
 
@@ -204,6 +206,7 @@ object PeopleHeightDemo {
     spark.sql(sql72).show()
 
     spark.stop()
+     */
 
   }
 
