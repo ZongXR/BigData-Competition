@@ -1,10 +1,10 @@
-<h1>一键自动安装大数据集群</h1>
+<h1>全国大数据竞赛</h1>
 <img src="https://hadoop.apache.org/hadoop-logo.jpg" alt="hadoop">
 <img src="https://spark.apache.org/images/spark-logo-rev.svg" alt="spark" width="141" height="72">
 <img alt="Apache Hive" src="https://hive.apache.org/images/hive_logo_medium.jpg">
 <h2>关于此项目</h2>
 <h3>为什么做了这么一个项目？</h3>
-因为部分初学者对于安装配置大数据集群环境感到苦恼，所以做了这么一个解放人力的自动化脚本。能够省去安装过程中的诸多麻烦。
+这是全国大数据竞赛的题目，因为部分初学者对于安装配置大数据集群环境感到苦恼，所以做了这么一个解放人力的自动化脚本。能够省去安装过程中的诸多麻烦。
 <h3>这个项目有什么用</h3>
 使用它能一键自动安装大数据集群环境，自动给你配置环境变量，自动给你配置hosts，自动给你配置免密登录，自动给你做其他配置，非常方便。从基础环境搭建，到zookeeper，再到hadoop，再到mysql，再到hive，再到spark，一键完成，自动部署。
 <h2>使用方法</h2>
