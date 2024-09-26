@@ -19,7 +19,7 @@ hostnamectl set-hostname master
 systemctl stop firewalld
 systemctl disable firewalld
 # 配置hosts
-local_ip=$(ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $2}'|tr -d "addr:")
+local_ip=$(ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $2}'|tr -d "addr:"|tail -n 1)
 echo -e "\n${local_ip} master" >> /etc/hosts
 index=1
 for arg in "$@"
@@ -46,6 +46,7 @@ do
 done
 # 配置时区
 tzselect
+timedatectl set-timezone Asia/Shanghai
 # 设置时钟
 sed -i '25 i fudge 127.127.1.0 stratum 10' /etc/ntp.conf
 sed -i '25 i server 127.127.1.0' /etc/ntp.conf

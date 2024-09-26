@@ -18,6 +18,7 @@ systemctl stop firewalld
 systemctl disable firewalld
 # 同步时钟任务
 whereis ntpdate
+timedatectl set-timezone Asia/Shanghai
 echo "*/30 10-17 * * * /usr/sbin/ntpdate master" >> /var/spool/cron/root
 # 配置java
 mkdir -p /usr/java
